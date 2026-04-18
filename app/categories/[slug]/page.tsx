@@ -1,8 +1,9 @@
-import { getProductsByCategory, categories, type CategorySlug } from "@/lib/products";
-import CategoryPageContent from "./category-content";
+import { getProductsByCategory, getCategories, type CategorySlug } from "@/lib/products";
+import CategoryPage from "./category-page-wrapper";
 
 /* ── Static params for static export ── */
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const categories = await getCategories();
   return categories.map((category) => ({
     slug: category.slug,
   }));
@@ -11,6 +12,7 @@ export function generateStaticParams() {
 /* ── Category Metadata ── */
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const categories = await getCategories();
   const category = categories.find((c) => c.slug === slug);
   
   if (!category) {
@@ -24,9 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 /* ── Main Page Component ── */
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function CategoryPageRoute({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const products = getProductsByCategory(slug as CategorySlug);
+  const products = await getProductsByCategory(slug as CategorySlug);
   
-  return <CategoryPageContent slug={slug as CategorySlug} products={products} />;
+  return <CategoryPage slug={slug as CategorySlug} products={products} />;
 }

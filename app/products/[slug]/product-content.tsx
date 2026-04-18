@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
+import { buildWhatsAppSingleProductUrl } from "@/lib/whatsapp";
 import { ChevronRight, Star, Heart, Phone, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -271,8 +272,16 @@ export default function ProductPageContent({ product, relatedProducts }: Product
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1 h-14 text-base font-medium"
+                  className="flex-1 h-14 text-base font-medium bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 cursor-pointer"
                   size="lg"
+                  onClick={() => {
+                    const url = buildWhatsAppSingleProductUrl(
+                      product.name,
+                      product.price,
+                      selectedSize
+                    );
+                    window.open(url, "_blank", "noopener,noreferrer");
+                  }}
                 >
                   <Phone className="h-5 w-5 mr-2" />
                   Buy on WhatsApp

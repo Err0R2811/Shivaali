@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Sheet,
   SheetContent,
@@ -10,12 +11,11 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
+import { buildWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 import { CartItemRow } from "./cart-item";
-import { ShoppingBag, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ShoppingBag, X, Phone } from "lucide-react";
 
 export function CartDrawer() {
-  const router = useRouter();
   const {
     items,
     itemCount,
@@ -31,9 +31,11 @@ export function CartDrawer() {
     return `₹${price.toLocaleString("en-IN")}`;
   };
 
-  const handleCheckout = () => {
+  const handleWhatsAppCheckout = () => {
+    if (items.length === 0) return;
+    const url = buildWhatsAppCheckoutUrl(items, subtotal);
+    window.open(url, "_blank", "noopener,noreferrer");
     closeCart();
-    router.push("/checkout");
   };
 
   return (
@@ -45,12 +47,12 @@ export function CartDrawer() {
         <SheetHeader className="relative">
           <button
             onClick={closeCart}
-            className="absolute right-0 top-0 p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-0 top-0 p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             aria-label="Close cart"
           >
             <X className="h-5 w-5" />
           </button>
-          <SheetTitle className="text-xl font-serif">Shopping Cart</SheetTitle>
+          <SheetTitle className="font-display text-xl">Shopping Cart</SheetTitle>
           <SheetDescription>
             {itemCount} item{itemCount !== 1 ? "s" : ""} in your cart
           </SheetDescription>
@@ -76,7 +78,7 @@ export function CartDrawer() {
           )}
         </div>
 
-        {/* Footer with subtotal and actions */}
+        {/* Footer with subtotal and WhatsApp checkout */}
         {items.length > 0 && (
           <SheetFooter className="flex-col gap-3 pt-4 border-t">
             <div className="flex justify-between w-full text-lg">
@@ -91,14 +93,30 @@ export function CartDrawer() {
               variant="ghost"
               size="sm"
               onClick={clearCart}
-              className="text-muted-foreground hover:text-destructive"
+              className="text-muted-foreground hover:text-destructive cursor-pointer"
             >
               Clear Cart
             </Button>
 
             {/* Proceed to Checkout */}
-            <Button className="w-full" size="lg" onClick={handleCheckout}>
-              Proceed to Checkout
+            <Link href="/checkout" onClick={closeCart} className="w-full">
+              <Button
+                className="w-full gold-button cursor-pointer"
+                size="lg"
+              >
+                Proceed to Checkout
+              </Button>
+            </Link>
+
+            {/* WhatsApp Quick Order */}
+            <Button
+              variant="outline"
+              className="w-full border-green-600 text-green-600 hover:bg-green-50 cursor-pointer"
+              size="lg"
+              onClick={handleWhatsAppCheckout}
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              Quick Order on WhatsApp
             </Button>
           </SheetFooter>
         )}
@@ -111,13 +129,13 @@ function EmptyCartState({ onContinueShopping }: { onContinueShopping: () => void
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center h-full">
       <ShoppingBag className="h-16 w-16 text-muted-foreground mb-4" />
-      <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
+      <h3 className="font-display text-lg font-semibold text-foreground mb-2">
         Your cart is empty
       </h3>
       <p className="text-sm text-muted-foreground mb-6">
         Add some items to get started
       </p>
-      <Button onClick={onContinueShopping} variant="outline">
+      <Button onClick={onContinueShopping} variant="outline" className="cursor-pointer">
         Continue Shopping
       </Button>
     </div>

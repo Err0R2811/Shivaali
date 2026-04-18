@@ -2,8 +2,8 @@ import { getProductBySlug, getRelatedProducts, getAllProducts } from "@/lib/prod
 import ProductPageContent from "./product-content";
 
 /* ── Static params for static export ── */
-export function generateStaticParams() {
-  const products = getAllProducts();
+export async function generateStaticParams() {
+  const products = await getAllProducts();
   return products.map((product) => ({
     slug: product.slug,
   }));
@@ -12,7 +12,7 @@ export function generateStaticParams() {
 /* ── Product Metadata ── */
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   
   if (!product) {
     return { title: "Product Not Found" };
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 /* ── Main Page Component ── */
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   
   if (!product) {
     return (
@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     );
   }
   
-  const relatedProducts = getRelatedProducts(slug, 4);
+  const relatedProducts = await getRelatedProducts(slug, 4);
   
   return <ProductPageContent product={product} relatedProducts={relatedProducts} />;
 }

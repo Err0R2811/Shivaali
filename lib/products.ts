@@ -1,3 +1,5 @@
+import { client } from './sanity'
+
 export interface Product {
   id: string;
   slug: string;
@@ -14,34 +16,36 @@ export interface Product {
 
 export type CategorySlug = "sarees" | "lehengas" | "kurtis";
 
-export const categories: { name: string; slug: CategorySlug; sub: string; count: string; image: string }[] = [
+export interface Category {
+  name: string;
+  slug: CategorySlug;
+  sub: string;
+  count: string;
+  image: string;
+}
+
+export const staticCategories: Category[] = [
   { name: "Sarees", slug: "sarees", sub: "Timeless Drapes", count: "120+ Designs", image: "/images/hero-saree.png" },
   { name: "Lehengas", slug: "lehengas", sub: "Royal Ensembles", count: "80+ Designs", image: "/images/category-lehenga.png" },
   { name: "Kurtis", slug: "kurtis", sub: "Everyday Elegance", count: "200+ Designs", image: "/images/category-kurti.png" },
 ];
 
-export function getAllProducts(): Product[] {
-  return products;
+export async function getCategories(): Promise<Category[]> {
+  if (!isSanityConnected) return staticCategories;
+
+  const query = `*[_type == "category"] {
+    name,
+    "slug": slug.current,
+    sub,
+    "count": count(*[_type == "product" && references(^._id)]) + " Designs",
+    "image": image.asset->url
+  }`;
+
+  return await client.fetch(query);
 }
 
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
-}
-
-export function getProductsByCategory(category: CategorySlug): Product[] {
-  return products.filter((p) => p.category === category);
-}
-
-export function getRelatedProducts(slug: string, limit = 4): Product[] {
-  const product = getProductBySlug(slug);
-  if (!product) return [];
-  return products
-    .filter((p) => p.category === product.category && p.slug !== slug)
-    .slice(0, limit);
-}
-
-// Static product data
-const products: Product[] = [
+// FALLBACK STATIC DATA (In case Sanity is not connected yet)
+export const staticProducts: Product[] = [
   // === SAREES ===
   {
     id: "sar-001",
@@ -240,3 +244,74 @@ const products: Product[] = [
     tag: "Sale",
   },
 ];
+
+const isSanityConnected = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "your_project_id";
+
+export async function getAllProducts(): Promise<Product[]> {
+  if (!isSanityConnected) return staticProducts;
+
+  const query = `*[_type == "product"] {
+    "id": _id,
+    "slug": slug.current,
+    name,
+    price,
+    originalPrice,
+    "images": images[].asset->url,
+    "category": category->slug.current,
+    sizes,
+    description,
+    inStock,
+    tag
+  }`;
+  
+  return await client.fetch(query);
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  if (!isSanityConnected) return staticProducts.find((p) => p.slug === slug);
+
+  const query = `*[_type == "product" && slug.current == $slug][0] {
+    "id": _id,
+    "slug": slug.current,
+    name,
+    price,
+    originalPrice,
+    "images": images[].asset->url,
+    "category": category->slug.current,
+    sizes,
+    description,
+    inStock,
+    tag
+  }`;
+
+  return await client.fetch(query, { slug });
+}
+
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  if (!isSanityConnected) return staticProducts.filter((p) => p.category === category);
+
+  const query = `*[_type == "product" && category->slug.current == $category] {
+    "id": _id,
+    "slug": slug.current,
+    name,
+    price,
+    originalPrice,
+    "images": images[].asset->url,
+    "category": category->slug.current,
+    sizes,
+    description,
+    inStock,
+    tag
+  }`;
+
+  return await client.fetch(query, { category });
+}
+
+export async function getRelatedProducts(slug: string, limit = 4): Promise<Product[]> {
+  const all = await getAllProducts();
+  const product = all.find(p => p.slug === slug);
+  if (!product) return [];
+  return all
+    .filter((p) => p.category === product.category && p.slug !== slug)
+    .slice(0, limit);
+}

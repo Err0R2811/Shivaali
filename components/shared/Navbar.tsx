@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, Search, Heart, Phone, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/cart-context";
+import { useSearch } from "@/hooks/use-search";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
-  { href: "/sarees", label: "Sarees" },
-  { href: "/lehengas", label: "Lehengas" },
-  { href: "/kurtis", label: "Kurtis" },
+  { href: "/categories/sarees", label: "Sarees" },
+  { href: "/categories/lehengas", label: "Lehengas" },
+  { href: "/categories/kurtis", label: "Kurtis" },
   { href: "/new-arrivals", label: "New Arrivals" },
   { href: "/about", label: "Our Story" },
   { href: "/contact", label: "Contact" },
@@ -19,12 +21,27 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { itemCount, openCart } = useCart();
+  const { query, results, search, clearSearch, isOpen: isSearchOpen, setIsOpen: setIsSearchOpen } = useSearch();
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close search on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+    if (isSearchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isSearchOpen, setIsSearchOpen]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -79,9 +96,68 @@ export function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
-            <button className="hidden sm:flex p-2.5 rounded-full text-foreground/70 hover:text-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer" aria-label="Search">
-              <Search className="h-5 w-5" />
-            </button>
+            {/* Search */}
+            <div ref={searchRef} className="relative">
+              <button
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="flex p-2.5 rounded-full text-foreground/70 hover:text-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer"
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </button>
+              
+              {/* Search Dropdown */}
+              <AnimatePresence>
+                {isSearchOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 top-full mt-2 w-80 bg-background rounded-lg shadow-xl border z-50"
+                  >
+                    <div className="p-3">
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={query}
+                        onChange={(e) => search(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                        autoFocus
+                      />
+                    </div>
+                    {results.length > 0 && (
+                      <div className="border-t max-h-80 overflow-y-auto">
+                        {results.slice(0, 5).map((product) => (
+                          <Link
+                            key={product.id}
+                            href={`/products/${product.slug}`}
+                            onClick={() => {
+                              clearSearch();
+                              setIsSearchOpen(false);
+                            }}
+                            className="flex items-center gap-3 p-3 hover:bg-muted transition-colors cursor-pointer"
+                          >
+                            <div className="w-12 h-12 bg-muted rounded-md flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium truncate">{product.name}</p>
+                              <p className="text-sm text-muted-foreground">₹{product.price.toLocaleString()}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                    {query && results.length === 0 && (
+                      <div className="p-4 text-center text-muted-foreground border-t">
+                        No products found
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            <ThemeToggle />
+            
             <button className="hidden sm:flex p-2.5 rounded-full text-foreground/70 hover:text-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer" aria-label="Wishlist">
               <Heart className="h-5 w-5" />
             </button>
