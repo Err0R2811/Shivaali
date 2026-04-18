@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/products";
+import { useCart } from "@/lib/cart-context";
 import { ChevronRight, Star, Heart, Phone, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -124,17 +125,27 @@ function RelatedProductCard({ product }: { product: Product }) {
 /* ── Main Page Component ── */
 export default function ProductPageContent({ product, relatedProducts }: ProductPageContentProps) {
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || "");
+  const { addItem, openCart } = useCart();
 
   const discount = Math.round((1 - product.price / product.originalPrice) * 100);
 
   const handleAddToCart = () => {
-    console.log("Add to cart:", {
+    if (!selectedSize) {
+      alert("Please select a size first");
+      return;
+    }
+    
+    addItem({
       productId: product.id,
-      productName: product.name,
-      size: selectedSize,
+      name: product.name,
+      slug: product.slug,
       price: product.price,
+      originalPrice: product.originalPrice,
+      image: product.images[0],
+      size: selectedSize,
     });
-    alert(`Added to cart: ${product.name} (${selectedSize}) - ₹${product.price.toLocaleString("en-IN")}`);
+    
+    openCart();
   };
 
   return (
