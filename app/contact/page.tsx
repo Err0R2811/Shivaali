@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, MessageCircle, Camera } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact Us - Shivaali",
@@ -25,7 +25,7 @@ export default function ContactPage() {
       {/* Contact Options */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* WhatsApp */}
             <a
               href="https://wa.me/919876543210"
@@ -82,6 +82,31 @@ export default function ContactPage() {
               </p>
               <span className="text-primary font-medium group-hover:underline">
                 hello@shivaali.com
+              </span>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/shivaali.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-8 rounded-2xl bg-card border border-border hover:shadow-lg transition-all duration-300 cursor-pointer"
+            >
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-primary">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                </svg>
+              </div>
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">
+                Instagram
+              </h3>
+              <p className="text-muted-foreground mb-3">
+                Follow us for the latest styles
+              </p>
+              <span className="text-primary font-medium group-hover:underline">
+                @shivaali.in
               </span>
             </a>
           </div>

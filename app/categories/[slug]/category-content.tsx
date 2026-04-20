@@ -83,7 +83,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           </button>
           {/* Quick action */}
           <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-green-600 text-white shadow-lg text-xs sm:text-sm font-medium">
+            <span className="gold-button flex items-center justify-center gap-2 w-full py-2.5 shadow-lg text-xs sm:text-sm font-medium">
               <Phone className="h-3.5 w-3.5" /> Buy on WhatsApp
             </span>
           </div>

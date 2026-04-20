@@ -42,7 +42,7 @@ export function CartDrawer() {
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
       <SheetContent
         side="right"
-        className="w-full sm:w-[400px] flex flex-col"
+        className="w-full sm:w-[400px] flex flex-col bg-background"
       >
         <SheetHeader className="relative">
           <button

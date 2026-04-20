@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Gift, Truck, Star, Heart, Phone, Sparkle, ShoppingBag } from "lucide-react";
+import { ArrowRight, Sparkles, Gift, Truck, Star, Heart, Phone, Sparkle, ShoppingBag, Camera } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import type { Product, Category } from "@/lib/products";
 
 /* ── Animation variants ── */
 const fadeUp = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 },
 };
 const fadeIn = {
@@ -117,9 +117,9 @@ export default function HomeClient({ products, categories }: HomeClientProps) {
           />
         </motion.div>
 
-        <motion.div style={{ opacity: heroOpacity }} className="container relative z-10 mx-auto px-4 lg:px-8">
-          <motion.div initial="initial" animate="animate" variants={stagger} className="max-w-2xl">
-            <motion.p variants={fadeUp} transition={{ duration: 0.5 }} className="text-accent font-semibold tracking-[0.25em] uppercase text-xs sm:text-sm mb-5 flex items-center gap-2">
+        <motion.div style={{ opacity: heroOpacity }} className="container relative z-10 mx-auto px-4 lg:px-8 flex flex-col justify-center text-center items-center">
+          <motion.div initial="initial" animate="animate" variants={stagger} className="max-w-3xl flex flex-col items-center">
+            <motion.p variants={fadeUp} transition={{ duration: 0.5 }} className="text-accent font-semibold tracking-[0.25em] uppercase text-xs sm:text-sm mb-5 flex items-center justify-center gap-2">
               <Sparkle className="w-3.5 h-3.5" /> Heritage Collection 2026
             </motion.p>
             <motion.h1 
@@ -142,14 +142,14 @@ export default function HomeClient({ products, categories }: HomeClientProps) {
             <motion.p variants={fadeUp} transition={{ duration: 0.6 }} className="text-lg md:text-xl text-white/80 mb-10 max-w-lg leading-relaxed">
               Handcrafted luxury ethnic wear from India&apos;s finest artisans. Sarees, Lehengas & more.
             </motion.p>
-            <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="flex flex-col sm:flex-row gap-4">
+            <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="flex flex-col sm:flex-row gap-4 mt-8">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link href="/categories/sarees" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:brightness-110 transition-all duration-200 cursor-pointer text-base shadow-lg shadow-accent/25 hover:shadow-accent/40">
+                <Link href="/categories/sarees" className="gold-button inline-flex items-center justify-center gap-2 px-10 py-4 font-semibold text-base">
                   <ShoppingBag className="h-4 w-4" /> Shop Collection <ArrowRight className="h-4 w-4" />
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link href="https://wa.me/919876543210" target="_blank" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-white/30 text-white font-medium hover:bg-white/10 transition-all duration-200 cursor-pointer text-base">
+                <Link href="https://wa.me/919876543210" target="_blank" className="inline-flex items-center justify-center gap-2 px-10 py-4 text-foreground font-medium rounded-full text-base border border-foreground/30 hover:bg-foreground/5 transition-all">
                   <Phone className="h-4 w-4" /> WhatsApp Us
                 </Link>
               </motion.div>
@@ -405,7 +405,7 @@ export default function HomeClient({ products, categories }: HomeClientProps) {
                 
                 {/* Refined buttons with gold gradient */}
                 <motion.div 
-                  className="flex flex-col sm:flex-row gap-5 justify-center"
+                  className="flex flex-col sm:flex-row flex-wrap gap-5 justify-center"
                   initial={{ y: 20, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -417,18 +417,14 @@ export default function HomeClient({ products, categories }: HomeClientProps) {
                   >
                     <Link 
                       href="/categories/sarees" 
-                      className="inline-flex items-center justify-center gap-2.5 px-10 py-4 rounded-full font-semibold text-base tracking-wide transition-all duration-300"
-                      style={{
-                        background: 'linear-gradient(135deg, #CA8A04 0%, #D4A90B 50%, #CA8A04 100%)',
-                        boxShadow: '0 4px 20px rgba(202,138,4,0.35)',
-                      }}
+                      className="gold-button inline-flex items-center justify-center gap-2.5 px-10 py-4 font-semibold text-base tracking-wide"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Explore Collection
                     </Link>
                   </motion.div>
                   
-                  {/* Elegant secondary button */}
+                  {/* Elegant secondary buttons */}
                   <motion.div 
                     whileHover={{ scale: 1.03, backgroundColor: "rgba(202,138,4,0.1)" }}
                     whileTap={{ scale: 0.98 }}
@@ -439,6 +435,24 @@ export default function HomeClient({ products, categories }: HomeClientProps) {
                       className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full border border-[#CA8A04]/50 text-[#CA8A04] hover:border-[#CA8A04] font-medium text-base tracking-wide transition-all duration-300"
                     >
                       <Phone className="h-4 w-4" /> Chat on WhatsApp
+                    </Link>
+                  </motion.div>
+
+                  <motion.div 
+                    whileHover={{ scale: 1.03, backgroundColor: "rgba(202,138,4,0.1)" }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link 
+                      href="https://www.instagram.com/shivaali.in" 
+                      target="_blank" 
+                      className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full border border-[#CA8A04]/50 text-[#CA8A04] hover:border-[#CA8A04] font-medium text-base tracking-wide transition-all duration-300"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                      </svg>
+                      Follow on Instagram
                     </Link>
                   </motion.div>
                 </motion.div>

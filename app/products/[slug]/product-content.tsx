@@ -265,14 +265,13 @@ export default function ProductPageContent({ product, relatedProducts }: Product
               <div className="flex flex-col sm:flex-row gap-3 mb-8">
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 h-14 text-base font-semibold"
+                  className="flex-1 h-14 text-base font-semibold gold-button shadow-lg"
                   size="lg"
                 >
                   Add to Cart
                 </Button>
                 <Button
-                  variant="outline"
-                  className="flex-1 h-14 text-base font-medium bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 cursor-pointer"
+                  className="flex-1 h-14 text-base font-semibold border-2 border-primary text-primary bg-transparent hover:bg-primary/5 shadow-sm cursor-pointer rounded-full"
                   size="lg"
                   onClick={() => {
                     const url = buildWhatsAppSingleProductUrl(

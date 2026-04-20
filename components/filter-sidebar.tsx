@@ -43,6 +43,7 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
   });
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDesktopOpen, setIsDesktopOpen] = useState(false);
 
   const sizes = getUniqueSizes(staticProducts);
   const categories = getUniqueCategories(staticProducts);
@@ -171,21 +172,8 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
       {/* Sizes */}
       <div>
         <h3 className="font-semibold mb-3">Sizes</h3>
-        <div className="space-y-2">
-          {sizes.map((size) => (
-            <label
-              key={size}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <Checkbox
-                checked={filters.sizes?.includes(size)}
-                onCheckedChange={(checked) =>
-                  handleSizeChange(size, checked as boolean)
-                }
-              />
-              <span className="text-sm">{size}</span>
-            </label>
-          ))}
+        <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-sm text-foreground font-medium text-center shadow-sm">
+          Available in Free Size Only
         </div>
       </div>
 
@@ -262,13 +250,41 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
         </>
       )}
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-64 flex-shrink-0">
-        <div className="sticky top-24 p-4 bg-card rounded-lg border">
-          <h2 className="text-lg font-semibold mb-4">Filters</h2>
-          <FilterContent />
-        </div>
-      </aside>
+      {/* Desktop Sidebar Toggle & Drawer */}
+      <div className="hidden lg:flex relative items-start">
+        {!isDesktopOpen && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsDesktopOpen(true)}
+            className="sticky top-28 ml-2 rounded-full shadow-md z-10 hover:bg-primary/5"
+            aria-label="Open Filters"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+          </Button>
+        )}
+        
+        <aside
+          className={`transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 ${
+            isDesktopOpen ? "w-64 opacity-100 mr-8" : "w-0 opacity-0 mr-0"
+          }`}
+        >
+          <div className="sticky top-24 p-5 bg-background rounded-xl border shadow-sm w-64 max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6 pb-2 border-b">
+              <h2 className="text-lg font-semibold">Filters</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsDesktopOpen(false)}
+                className="h-8 w-8 rounded-full"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <FilterContent />
+          </div>
+        </aside>
+      </div>
     </>
   );
 }

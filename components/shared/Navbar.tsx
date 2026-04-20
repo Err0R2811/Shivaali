@@ -109,12 +109,12 @@ export function Navbar() {
               {/* Search Dropdown */}
               <AnimatePresence>
                 {isSearchOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 top-full mt-2 w-80 bg-background rounded-lg shadow-xl border z-50"
-                  >
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute right-0 top-full mt-2 w-80 bg-background rounded-lg shadow-xl border z-50"
+                    >
                     <div className="p-3">
                       <input
                         type="text"
