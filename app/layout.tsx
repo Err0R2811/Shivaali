@@ -5,6 +5,8 @@ import { Footer } from "@/components/shared/Footer";
 import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Shivaali | Premium Indian Ethnic Fashion",
@@ -51,6 +53,8 @@ export default function RootLayout({
             <CartDrawer />
           </CartProvider>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
