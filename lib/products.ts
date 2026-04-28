@@ -245,7 +245,10 @@ export const staticProducts: Product[] = [
   },
 ];
 
-const isSanityConnected = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "your_project_id";
+const isSanityConnected = 
+  !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && 
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "your_project_id" && 
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "dev";
 
 export async function getAllProducts(): Promise<Product[]> {
   if (!isSanityConnected) return staticProducts;
